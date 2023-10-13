@@ -3,7 +3,10 @@ from MNISTDataset import MNISTDataset
 
 m = MNISTDataset('./data/train.csv')
 
-print(len(m))
+t = MNISTDataset('./data/test.csv', False)
 
+print('Size of train:',len(m))
+print('Size of test:', len(t))
 
-print(m[0])
+print(m[10])
+print(t[0])
