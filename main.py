@@ -4,6 +4,8 @@ from torch.utils.data import DataLoader
 
 import torch
 
+import time
+
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 print(f"Using {device} device")
@@ -73,7 +75,7 @@ def decodeLabel(num: torch.Tensor):
 
 loss_fn = torch.nn.CrossEntropyLoss()
 
-optim = torch.optim.SGD(model.parameters(), lr=1e-5, momentum=0.9)
+optim = torch.optim.Adam(model.parameters(), lr=1e-4)
 
 TRAIN_SIZE = len(train_loader.dataset)
 TEST_SIZE = len(test_loader.dataset)
@@ -121,4 +123,5 @@ for currentEpoch in range(EPOCHS):
         f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n"
     )
 
-torch.save(model, "models/mnist.pth")
+timestamp = time.time()
+torch.save(model, f"models/mnist-{timestamp}.pth")
