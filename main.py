@@ -4,6 +4,10 @@ from torch.utils.data import DataLoader
 
 import torch
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+print(f"Using {device} device")
+
 
 class MNISTClassifier(torch.nn.Module):
     def __init__(self):
@@ -40,7 +44,7 @@ train_loader = DataLoader(
 
 test_loader = DataLoader(t, 10, True)
 
-model = MNISTClassifier()
+model = MNISTClassifier().to(device)
 
 print(model)
 
@@ -70,8 +74,9 @@ for currentEpoch in range(EPOCHS):
 
     model.train()
     for batch, (label, img) in enumerate(train_loader):
+        label, img = label.to(device), img.to(device)
         pred = model(img)
-        expected = decodeLabel(label)
+        expected = decodeLabel(label).to(device)
         loss: torch.Tensor = loss_fn(pred, expected)
 
         loss.backward()
