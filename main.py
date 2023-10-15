@@ -121,4 +121,4 @@ for currentEpoch in range(EPOCHS):
         f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n"
     )
 
-torch.save(model, "mnist.pth")
+torch.save(model, "models/mnist.pth")
