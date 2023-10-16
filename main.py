@@ -17,12 +17,12 @@ class MNISTClassifier(torch.nn.Module):
 
         self.IN_SIZE = 784
 
-        self.h1 = torch.nn.Linear(self.IN_SIZE, self.IN_SIZE * 2)
+        self.h1 = torch.nn.Linear(self.IN_SIZE, 256)
         self.a1 = torch.nn.ReLU()
-        self.h2 = torch.nn.Linear(self.IN_SIZE * 2, 512)
+        self.h2 = torch.nn.Linear(256, 128)
         self.a2 = torch.nn.ReLU()
-        self.out = torch.nn.Linear(512, 10)
-        self.a3 = torch.nn.Softmax(dim=0)
+        self.out = torch.nn.Linear(128, 10)
+        self.outA = torch.nn.Softmax(dim=0)
 
     def forward(self, x):
         x = torch.nn.Flatten()(x)
@@ -31,13 +31,13 @@ class MNISTClassifier(torch.nn.Module):
         x = self.h2(x)
         x = self.a2(x)
         x = self.out(x)
-        return self.a3(x)
+        return self.outA(x)
 
 
 m = MNISTDataset("./data/train.csv")
 t = MNISTDataset("./data/test.csv", False)
 
-train, test = MNISTDatasetReader("./data/train.csv").getDatasets()
+train, test = MNISTDatasetReader("./data/train.csv", 0.95).getDatasets()
 val = MNISTDatasetReader("./data/test.csv", 1).getDatasets()
 
 train, test, val = (
@@ -46,15 +46,14 @@ train, test, val = (
     MNISTDataset(val),
 )
 
-BATCH_SIZE = 32
+BATCH_SIZE = 60
 
 train_loader = DataLoader(
     train,
-    BATCH_SIZE,
-    True,
+    BATCH_SIZE
 )
 
-test_loader = DataLoader(test, BATCH_SIZE, True)
+test_loader = DataLoader(test, BATCH_SIZE)
 
 val_loader = DataLoader(val, BATCH_SIZE)
 
@@ -75,16 +74,16 @@ def decodeLabel(num: torch.Tensor):
 
 loss_fn = torch.nn.CrossEntropyLoss()
 
-optim = torch.optim.Adam(model.parameters(), lr=1e-4)
+optim = torch.optim.Adam(model.parameters(), lr=1e-5)
 
 TRAIN_SIZE = len(train_loader.dataset)
 TEST_SIZE = len(test_loader.dataset)
 
 
-EPOCHS = 50
+EPOCHS = 100
 
 for currentEpoch in range(EPOCHS):
-    print(f"EPOCH: {currentEpoch+1}|{EPOCHS}\n", "-" * 10)
+    print(f"EPOCH: {currentEpoch+1}|{EPOCHS}\n", "-" * 10, sep='')
 
     model.train()
     for batch, (label, img) in enumerate(train_loader):
@@ -120,7 +119,7 @@ for currentEpoch in range(EPOCHS):
     test_loss /= NUM_BATCHES
     correct /= TEST_SIZE
     print(
-        f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n"
+        f"\nTest Error:\nAccuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n"
     )
 
 timestamp = time.time()
