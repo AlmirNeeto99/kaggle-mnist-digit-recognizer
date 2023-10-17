@@ -1,4 +1,5 @@
 from MNISTDataset import MNISTDataset, MNISTDatasetReader
+from MNISTClassifier import MNISTClassifier
 
 from torch.utils.data import DataLoader
 
@@ -8,36 +9,13 @@ import time
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-print(f"Using {device} device")
-
-
-class MNISTClassifier(torch.nn.Module):
-    def __init__(self):
-        super().__init__()
-
-        self.IN_SIZE = 784
-
-        self.h1 = torch.nn.Linear(self.IN_SIZE, 256)
-        self.a1 = torch.nn.ReLU()
-        self.h2 = torch.nn.Linear(256, 128)
-        self.a2 = torch.nn.ReLU()
-        self.out = torch.nn.Linear(128, 10)
-        self.outA = torch.nn.Softmax(dim=0)
-
-    def forward(self, x):
-        x = torch.nn.Flatten()(x)
-        x = self.h1(x)
-        x = self.a1(x)
-        x = self.h2(x)
-        x = self.a2(x)
-        x = self.out(x)
-        return self.outA(x)
+print(f'Using "{device}" device')
 
 
 m = MNISTDataset("./data/train.csv")
 t = MNISTDataset("./data/test.csv", False)
 
-train, test = MNISTDatasetReader("./data/train.csv", 0.95).getDatasets()
+train, test = MNISTDatasetReader("./data/train.csv", 0.9).getDatasets()
 val = MNISTDatasetReader("./data/test.csv", 1).getDatasets()
 
 train, test, val = (
@@ -46,12 +24,9 @@ train, test, val = (
     MNISTDataset(val),
 )
 
-BATCH_SIZE = 60
+BATCH_SIZE = 128
 
-train_loader = DataLoader(
-    train,
-    BATCH_SIZE
-)
+train_loader = DataLoader(train, BATCH_SIZE)
 
 test_loader = DataLoader(test, BATCH_SIZE)
 
@@ -83,7 +58,7 @@ TEST_SIZE = len(test_loader.dataset)
 EPOCHS = 100
 
 for currentEpoch in range(EPOCHS):
-    print(f"EPOCH: {currentEpoch+1}|{EPOCHS}\n", "-" * 10, sep='')
+    print(f"EPOCH: {currentEpoch+1}|{EPOCHS}\n", "-" * 10, sep="")
 
     model.train()
     for batch, (label, img) in enumerate(train_loader):
@@ -123,4 +98,4 @@ for currentEpoch in range(EPOCHS):
     )
 
 timestamp = time.time()
-torch.save(model, f"models/mnist-{timestamp}.pth")
+torch.save(model, f"models/mnist-{timestamp}-{100*correct:.0f}.pth")
