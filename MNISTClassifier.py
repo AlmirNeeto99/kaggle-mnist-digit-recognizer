@@ -5,12 +5,12 @@ class MNISTClassifier(torch.nn.Module):
     def __init__(self):
         super().__init__()
 
-        self.h1 = torch.nn.Conv2d(1, 64, 3, 1)  # 26
+        self.h1 = torch.nn.Conv2d(1, 128, 3, 1)  # 26
         self.a1 = torch.nn.ReLU()
-        self.h2 = torch.nn.Conv2d(64, 128, 3, 1)  # 24
+        self.h2 = torch.nn.Conv2d(128, 256, 3, 1)  # 24
         self.a2 = torch.nn.ReLU()
         self.f = torch.nn.Flatten()
-        self.out = torch.nn.Linear(128 * 12 * 12, 10)
+        self.out = torch.nn.Linear(256 * 24 * 24, 10)
         self.outA = torch.nn.Softmax(dim=0)
 
     def forward(self, x):
