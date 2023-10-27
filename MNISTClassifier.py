@@ -11,7 +11,7 @@ class MNISTClassifier(torch.nn.Module):
         self.a2 = torch.nn.ReLU()
         self.f = torch.nn.Flatten()
         self.out = torch.nn.Linear(256 * 24 * 24, 10)
-        self.outA = torch.nn.Softmax(dim=0)
+        self.outA = torch.nn.Softmax(dim=1)
 
     def forward(self, x):
         x = torch.nn.Unflatten(1, (1, 28, 28))(x)
