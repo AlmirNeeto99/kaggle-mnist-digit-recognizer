@@ -78,7 +78,6 @@ def run():
                 pred = model(image)
                 expected = decodeLabel(label).to(device)
                 test_loss += loss_fn(pred, expected).item()
-                print(pred, expected)
                 correct += (
                     (pred.argmax(1) == expected.argmax(1))
                     .type(torch.float)
