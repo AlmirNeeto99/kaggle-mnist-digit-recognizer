@@ -21,10 +21,10 @@ def run():
         MNISTDataset(test, True),
     )
 
-    BATCH_SIZE = 128
+    BATCH_SIZE = 64
 
-    train_loader = DataLoader(train, BATCH_SIZE, shuffle=True)
-    test_loader = DataLoader(test, BATCH_SIZE, shuffle=True)
+    train_loader = DataLoader(train, BATCH_SIZE, shuffle=False)
+    test_loader = DataLoader(test, BATCH_SIZE, shuffle=False)
 
     model = MNISTClassifier().to(device)
 
@@ -46,7 +46,7 @@ def run():
     TRAIN_SIZE = len(train_loader.dataset)
     TEST_SIZE = len(test_loader.dataset)
 
-    EPOCHS = 100
+    EPOCHS = 250
 
     for currentEpoch in range(EPOCHS):
         print(f"EPOCH: {currentEpoch+1}|{EPOCHS}\n", "-" * 10, sep="")
@@ -92,4 +92,4 @@ def run():
         )
 
     timestamp = time.time()
-    torch.save(model, f"models/mnist-{timestamp}-{100*correct:.0f}.pth")
+    torch.save(model, f"models/mnist-{timestamp}-{100*correct:.1f}.pth")
