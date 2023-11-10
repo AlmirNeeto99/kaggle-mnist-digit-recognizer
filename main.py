@@ -13,8 +13,8 @@ def run():
 
     print(f'Using "{device}" device')
 
-    train = MNISTDatasetReader("./data/train.csv", 1).getDatasets()
-    test = MNISTDatasetReader("./data/train.csv", 1).getDatasets()
+    train, test = MNISTDatasetReader("./data/train.csv", 0.9).getDatasets()
+    # test = MNISTDatasetReader("./data/train.csv", 1).getDatasets()
 
     train, test = (
         MNISTDataset(train, True),
@@ -46,7 +46,7 @@ def run():
     TRAIN_SIZE = len(train_loader.dataset)
     TEST_SIZE = len(test_loader.dataset)
 
-    EPOCHS = 250
+    EPOCHS = 15
 
     for currentEpoch in range(EPOCHS):
         print(f"EPOCH: {currentEpoch+1}|{EPOCHS}\n", "-" * 10, sep="")

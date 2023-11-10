@@ -3,7 +3,7 @@ import torch
 
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-classifier = torch.load("./models/mnist-98.214286.pth").to(device)
+classifier = torch.load("./models/mnist-1699530821.564436-99.7.pth").to(device)
 
 print(classifier)
 
